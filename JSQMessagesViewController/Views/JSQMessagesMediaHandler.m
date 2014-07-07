@@ -8,7 +8,7 @@
 
 #import "JSQMessagesMediaHandler.h"
 #import "JSQMessagesCollectionViewCell.h"
-#import <SDWebImage/UIImageView+WebCache.h>
+#import <AFNetworking/UIImageView+AFNetworking.h>
 
 @interface JSQMessagesMediaHandler ()
 
@@ -45,20 +45,21 @@
     [self addActitityIndicator];
     
     __weak __typeof(self) weakSelf = self;
-    
-    [self.cell.mediaImageView setImageWithURL:imageURL
-                                    completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-                                        
-                                        __typeof(self) strongSelf = weakSelf;
-                                        [strongSelf maskImageViewWithBubble];
-                                        [strongSelf removeActitityIndicator];
-                                    }];
+    [self.cell.mediaImageView setImageWithURLRequest:[NSURLRequest requestWithURL:imageURL]
+                                    placeholderImage:nil
+                                             success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+        __typeof(self) strongSelf = weakSelf;
+        strongSelf.cell.mediaImageView.image = image;
+        [strongSelf maskImageViewWithBubble];
+        [strongSelf removeActitityIndicator];
+    }
+                                             failure:nil];
 }
 
 - (void) cellWillBeReused;
 {
     self.cell.mediaImageView.image = nil;
-    [self.cell.mediaImageView cancelCurrentImageLoad];
+    [self.cell.mediaImageView cancelImageRequestOperation];
     [self removeActitityIndicator];
 }
 

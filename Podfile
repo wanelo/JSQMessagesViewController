@@ -2,6 +2,6 @@ platform :ios, '7.0'
 
 pod 'JSQSystemSoundPlayer'
 pod 'OCMock'
-pod 'SDWebImage'
+pod 'AFNetworking'
 
 link_with 'JSQMessages'
