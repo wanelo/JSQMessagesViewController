@@ -362,7 +362,7 @@ const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault = 20.0f;
         
         CGFloat verticalInsets = self.messageBubbleTextViewTextContainerInsets.top + self.messageBubbleTextViewTextContainerInsets.bottom;
         
-        finalSize = CGSizeMake(stringSize.width, stringSize.height + verticalInsets);
+        finalSize = CGSizeMake(stringSize.width, stringSize.height + verticalInsets + 1);
     }
     else if (messageData.kind == JSQMessageLocalMediaKind || messageData.kind == JSQMessageRemoteMediaKind)
     {
