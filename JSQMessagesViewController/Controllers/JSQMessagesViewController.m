@@ -319,10 +319,21 @@ static void * kJSQMessagesKeyValueObservingContext = &kJSQMessagesKeyValueObserv
     NSInteger items = [self.collectionView numberOfItemsInSection:0];
     
     if (items > 0) {
+        CGFloat collectionViewContentHeight = [self.collectionView.collectionViewLayout collectionViewContentSize].height;
+        BOOL isContentTooSmall = (collectionViewContentHeight < self.collectionView.bounds.size.height);
+        
+        if (isContentTooSmall) {
+            //  workaround for the first few messages not scrolling
+            //  when the collection view content size is too small, `scrollToItemAtIndexPath:` doesn't work properly
+            //  this seems to be a UIKit bug, see #256 on GitHub
+            [self.collectionView scrollRectToVisible:CGRectMake(0.0, collectionViewContentHeight - 1.0f, 1.0f, 1.0f)
+                                            animated:animated];
+            return;
+        }
+        
         [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:items - 1 inSection:0]
                                     atScrollPosition:UICollectionViewScrollPositionTop
-                                            animated:animated];
-    }
+                                            animated:animated];    }
 }
 
 #pragma mark - JSQMessages collection view data source
